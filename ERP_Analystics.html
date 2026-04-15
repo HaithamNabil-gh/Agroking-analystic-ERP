@@ -1,0 +1,1573 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام ERP للاستثمار الزراعي | عرض تقديمي</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2E7D32;
+            --primary-dark: #1B5E20;
+            --primary-light: #4CAF50;
+            --secondary: #FF8F00;
+            --accent: #FF6F00;
+            --dark: #1a1a2e;
+            --gray: #f0f2f5;
+            --white: #ffffff;
+            --success: #00C853;
+            --warning: #FFD600;
+            --danger: #D32F2F;
+            --info: #0288D1;
+        }
+
+        body {
+            font-family: 'Cairo', 'Tajawal', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+            color: var(--dark);
+            line-height: 1.7;
+        }
+
+        .presentation-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* شريط التقدم */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transform-origin: 0%;
+            z-index: 1000;
+        }
+
+        /* الهيدر */
+        .header {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+            color: var(--white);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: pulse 6s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.3; }
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header-title p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+        }
+
+        .header-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 15px 30px;
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .header-badge span {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        /* التنقل */
+        .nav-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+            background: var(--white);
+            padding: 15px 20px;
+            border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            position: sticky;
+            top: 10px;
+            z-index: 100;
+        }
+
+        .nav-tab {
+            padding: 12px 24px;
+            border-radius: 40px;
+            border: none;
+            background: transparent;
+            color: #666;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .nav-tab i {
+            margin-left: 8px;
+            color: var(--primary);
+        }
+
+        .nav-tab:hover {
+            background: var(--gray);
+            color: var(--primary);
+        }
+
+        .nav-tab.active {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .nav-tab.active i {
+            color: var(--white);
+        }
+
+        /* البطاقات */
+        .card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--gray);
+        }
+
+        .card-header i {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-left: 15px;
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .card-header h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .card-header .badge {
+            margin-right: auto;
+            background: var(--primary-light);
+            color: var(--white);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        /* قسم الإحصائيات */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--white);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            border-right: 4px solid var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:nth-child(2) { border-right-color: var(--secondary); }
+        .stat-card:nth-child(3) { border-right-color: var(--info); }
+        .stat-card:nth-child(4) { border-right-color: var(--success); }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--dark);
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        /* جدول الأقسام */
+        .divisions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .division-card {
+            background: linear-gradient(135deg, #f8fff8 0%, #ffffff 100%);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid #e0f0e0;
+            transition: all 0.3s ease;
+        }
+
+        .division-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 10px 25px rgba(46,125,50,0.1);
+        }
+
+        .division-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .division-icon i {
+            font-size: 2rem;
+            color: var(--white);
+        }
+
+        .division-card h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--primary-dark);
+        }
+
+        .division-features {
+            list-style: none;
+            margin-top: 15px;
+        }
+
+        .division-features li {
+            padding: 8px 0;
+            border-bottom: 1px dashed #ddd;
+            display: flex;
+            align-items: center;
+        }
+
+        .division-features li i {
+            color: var(--success);
+            margin-left: 10px;
+            font-size: 0.9rem;
+        }
+
+        /* جدول قاعدة البيانات */
+        .db-diagram {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+
+        .table-schema {
+            display: inline-block;
+            background: var(--white);
+            border: 2px solid var(--primary);
+            border-radius: 10px;
+            padding: 15px 25px;
+            margin: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .table-schema h4 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+
+        .table-schema p {
+            margin: 5px 0;
+            font-size: 0.9rem;
+        }
+
+        .relation-line {
+            display: inline-block;
+            font-size: 1.5rem;
+            color: var(--secondary);
+        }
+
+        /* Workflow */
+        .workflow-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .workflow-step {
+            background: var(--white);
+            border-radius: 10px;
+            padding: 15px 25px;
+            border: 2px solid var(--primary-light);
+            position: relative;
+            min-width: 150px;
+            text-align: center;
+        }
+
+        .workflow-step i {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .workflow-arrow {
+            font-size: 2rem;
+            color: var(--secondary);
+            align-self: center;
+        }
+
+        /* حسابات */
+        .account-tree {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #00ff88;
+            padding: 25px;
+            border-radius: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+        }
+
+        .account-tree pre {
+            color: #e0e0e0;
+        }
+
+        /* الجداول */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .data-table th {
+            background: var(--primary);
+            color: var(--white);
+            padding: 15px;
+            font-weight: 600;
+            text-align: right;
+        }
+
+        .data-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .data-table tr:hover {
+            background: #f5f5f5;
+        }
+
+        .data-table .highlight {
+            background: #e8f5e9;
+        }
+
+        /* التقارير */
+        .report-preview {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid #e0e0e0;
+            margin: 20px 0;
+        }
+
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .report-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px dashed #ddd;
+        }
+
+        .report-row.total {
+            font-weight: 700;
+            color: var(--primary-dark);
+            border-top: 2px solid var(--primary);
+            border-bottom: none;
+            margin-top: 10px;
+            padding-top: 15px;
+        }
+
+        /* Tech Stack */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .tech-item {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+
+        .tech-item:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .tech-item i {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .tech-item h4 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .tech-item p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* التحديات */
+        .challenge-card {
+            background: #fff8e1;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-right: 4px solid var(--warning);
+        }
+
+        .challenge-card.solved {
+            background: #e8f5e9;
+            border-right-color: var(--success);
+        }
+
+        .challenge-title {
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .challenge-title i {
+            margin-left: 10px;
+        }
+
+        .solution {
+            color: var(--success);
+            font-weight: 500;
+            margin-top: 10px;
+            padding-right: 25px;
+        }
+
+        /* خريطة الطريق */
+        .timeline {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin: 40px 0;
+        }
+
+        .timeline-phase {
+            flex: 1;
+            min-width: 200px;
+            text-align: center;
+            position: relative;
+            padding: 20px;
+        }
+
+        .timeline-phase::after {
+            content: '→';
+            position: absolute;
+            left: -10px;
+            top: 50%;
+            font-size: 2rem;
+            color: var(--primary);
+        }
+
+        .timeline-phase:last-child::after {
+            display: none;
+        }
+
+        .phase-number {
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-weight: 700;
+            font-size: 1.3rem;
+        }
+
+        .phase-title {
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--primary-dark);
+        }
+
+        .phase-desc {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* الفوتر */
+        .footer {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            border-top: 1px solid #e0e0e0;
+            margin-top: 40px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-title h1 {
+                font-size: 1.8rem;
+            }
+            
+            .nav-tabs {
+                border-radius: 20px;
+            }
+            
+            .card-header h2 {
+                font-size: 1.4rem;
+            }
+            
+            .timeline-phase::after {
+                display: none;
+            }
+        }
+
+        /* الطباعة */
+        @media print {
+            .nav-tabs, .progress-bar {
+                display: none;
+            }
+            .card {
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+        }
+
+        /* تنسيق المحتوى المخفي للتبويبات */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+    
+    <div class="presentation-container">
+        <!-- الهيدر -->
+        <header class="header">
+            <div class="header-content">
+                <div class="header-title">
+                    <h1>🌾 تحليل نظام ERP لشركة Agroking للإستثمار الزراعي</h1>
+                    <p>حل متكامل لإدارة الشركات الزراعية متعددة الأنشطة</p>
+                </div>
+                <div class="header-badge">
+                    <span>Production Ready</span>
+                    <small>إصدار 1.0</small>
+                </div>
+            </div>
+        </header>
+
+        <!-- شريط التنقل -->
+        <nav class="nav-tabs" id="navTabs">
+            <button class="nav-tab active" data-tab="overview"><i class="fas fa-chart-pie"></i> نظرة عامة</button>
+            <button class="nav-tab" data-tab="divisions"><i class="fas fa-building"></i> الأقسام</button>
+            <button class="nav-tab" data-tab="database"><i class="fas fa-database"></i> قاعدة البيانات</button>
+            <button class="nav-tab" data-tab="accounting"><i class="fas fa-calculator"></i> المحاسبة</button>
+            <button class="nav-tab" data-tab="workflow"><i class="fas fa-diagram-project"></i> سير العمل</button>
+            <button class="nav-tab" data-tab="reports"><i class="fas fa-file-alt"></i> التقارير</button>
+            <button class="nav-tab" data-tab="tech"><i class="fas fa-code"></i> التقنيات</button>
+            <button class="nav-tab" data-tab="challenges"><i class="fas fa-exclamation-triangle"></i> التحديات</button>
+            <button class="nav-tab" data-tab="roadmap"><i class="fas fa-road"></i> خريطة الطريق</button>
+        </nav>
+
+        <!-- المحتوى -->
+        
+        <!-- تبويب: نظرة عامة -->
+        <div class="tab-content active" id="overview">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-store"></i></div>
+                    <div class="stat-value">5</div>
+                    <div class="stat-label">أقسام تشغيلية مستقلة</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-users"></i></div>
+                    <div class="stat-value">نظام Party</div>
+                    <div class="stat-label">إدارة موحدة للعملاء والموردين</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+                    <div class="stat-value">Profit Center</div>
+                    <div class="stat-label">محاسبة مستقلة لكل قسم</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-box"></i></div>
+                    <div class="stat-value">متعدد</div>
+                    <div class="stat-label">إدارة مخزون متقدمة</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-info-circle"></i>
+                    <h2>نظرة عامة على النظام</h2>
+                    <span class="badge">ERP متكامل</span>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                    <div>
+                        <h3 style="color: var(--primary); margin-bottom: 20px;">🎯 الهدف الرئيسي</h3>
+                        <p style="font-size: 1.1rem; margin-bottom: 20px;">
+                            توفير نظام محاسبي وإداري متكامل لإدارة شركة استثمار زراعي تعمل في عدة قطاعات،
+                            مع إمكانية إدارة كل قسم كوحدة ربح مستقلة (Profit Center) مع توحيد البيانات
+                            ماليًا وإداريًا.
+                        </p>
+                        
+                        <h3 style="color: var(--primary); margin-bottom: 20px;">✨ المميزات الرئيسية</h3>
+                        <ul style="list-style: none;">
+                            <li style="margin-bottom: 15px;"><i class="fas fa-check-circle" style="color: var(--success); margin-left: 10px;"></i> نظام Party موحد للعملاء والموردين</li>
+                            <li style="margin-bottom: 15px;"><i class="fas fa-check-circle" style="color: var(--success); margin-left: 10px;"></i> محاسبة مستقلة لكل قسم مع تجميع مركزي</li>
+                            <li style="margin-bottom: 15px;"><i class="fas fa-check-circle" style="color: var(--success); margin-left: 10px;"></i> إدارة مخزون متعدد المستودعات والتحويلات</li>
+                            <li style="margin-bottom: 15px;"><i class="fas fa-check-circle" style="color: var(--success); margin-left: 10px;"></i> تتبع مواد التعبئة والعهد للمزارعين</li>
+                            <li style="margin-bottom: 15px;"><i class="fas fa-check-circle" style="color: var(--success); margin-left: 10px;"></i> نظام خزائن وتحويلات مالية بين الأقسام</li>
+                            <li style="margin-bottom: 15px;"><i class="fas fa-check-circle" style="color: var(--success); margin-left: 10px;"></i> تقارير أرباح وخسائر لكل قسم بشكل منفصل</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%); padding: 25px; border-radius: 15px;">
+                        <h3 style="color: var(--primary-dark); margin-bottom: 20px;">📊 الأقسام التشغيلية</h3>
+                        <div style="display: flex; flex-direction: column; gap: 15px;">
+                            <div style="display: flex; align-items: center;">
+                                <div style="width: 40px; height: 40px; background: var(--primary); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-left: 15px;">
+                                    <i class="fas fa-spray-can" style="color: white;"></i>
+                                </div>
+                                <div><strong>قسم المبيدات</strong> - مبيعات، مشتريات، مخزون</div>
+                            </div>
+                            <div style="display: flex; align-items: center;">
+                                <div style="width: 40px; height: 40px; background: var(--info); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-left: 15px;">
+                                    <i class="fas fa-water" style="color: white;"></i>
+                                </div>
+                                <div><strong>قسم شبكات الري</strong> - مبيعات، مشتريات، مخزون</div>
+                            </div>
+                            <div style="display: flex; align-items: center;">
+                                <div style="width: 40px; height: 40px; background: var(--secondary); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-left: 15px;">
+                                    <i class="fas fa-truck" style="color: white;"></i>
+                                </div>
+                                <div><strong>قسم التوريد</strong> - استلام، فرز، توريد، مواد تعبئة</div>
+                            </div>
+                            <div style="display: flex; align-items: center;">
+                                <div style="width: 40px; height: 40px; background: var(--success); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-left: 15px;">
+                                    <i class="fas fa-tractor" style="color: white;"></i>
+                                </div>
+                                <div><strong>قسم المزارع</strong> - إدارة الأراضي، زراعة، حصاد</div>
+                            </div>
+                            <div style="display: flex; align-items: center;">
+                                <div style="width: 40px; height: 40px; background: var(--accent); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-left: 15px;">
+                                    <i class="fas fa-microscope" style="color: white;"></i>
+                                </div>
+                                <div><strong>قسم الدعم الفني</strong> - زيارات، تشخيص، توصيات</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-sitemap"></i>
+                    <h2>هيكل النظام</h2>
+                </div>
+                
+                <div class="db-diagram" style="text-align: center;">
+                    <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 10px;">
+                        <div class="table-schema">
+                            <h4><i class="fas fa-building"></i> الأقسام</h4>
+                            <p>المبيدات | الري | التوريد</p>
+                            <p>المزارع | الدعم الفني</p>
+                        </div>
+                        <span class="relation-line">⟷</span>
+                        <div class="table-schema">
+                            <h4><i class="fas fa-user-friends"></i> Party</h4>
+                            <p>عميل / مورد / كلاهما</p>
+                            <p>معلومات موحدة</p>
+                        </div>
+                        <span class="relation-line">⟷</span>
+                        <div class="table-schema">
+                            <h4><i class="fas fa-exchange-alt"></i> المعاملات</h4>
+                            <p>مبيعات | مشتريات</p>
+                            <p>توريد | تحويلات</p>
+                        </div>
+                        <span class="relation-line">⟷</span>
+                        <div class="table-schema">
+                            <h4><i class="fas fa-calculator"></i> المحاسبة</h4>
+                            <p>قيود يومية</p>
+                            <p>مراكز تكلفة</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- تبويب: الأقسام -->
+        <div class="tab-content" id="divisions">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-building"></i>
+                    <h2>الأقسام التشغيلية - Profit Centers</h2>
+                </div>
+                
+                <div class="divisions-grid">
+                    <div class="division-card">
+                        <div class="division-icon"><i class="fas fa-spray-can"></i></div>
+                        <h3>قسم المبيدات</h3>
+                        <ul class="division-features">
+                            <li><i class="fas fa-check"></i> مبيعات المبيدات والأسمدة</li>
+                            <li><i class="fas fa-check"></i> مشتريات من الموردين</li>
+                            <li><i class="fas fa-check"></i> إدارة المخزون</li>
+                            <li><i class="fas fa-check"></i> حسابات العملاء والموردين</li>
+                            <li><i class="fas fa-check"></i> خزينة مستقلة</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="division-card">
+                        <div class="division-icon"><i class="fas fa-water"></i></div>
+                        <h3>قسم شبكات الري</h3>
+                        <ul class="division-features">
+                            <li><i class="fas fa-check"></i> مبيعات معدات الري</li>
+                            <li><i class="fas fa-check"></i> مشتريات وقطع غيار</li>
+                            <li><i class="fas fa-check"></i> إدارة المخزون</li>
+                            <li><i class="fas fa-check"></i> حسابات العملاء والموردين</li>
+                            <li><i class="fas fa-check"></i> خزينة مستقلة</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="division-card">
+                        <div class="division-icon"><i class="fas fa-truck"></i></div>
+                        <h3>قسم التوريد</h3>
+                        <ul class="division-features">
+                            <li><i class="fas fa-check"></i> استلام المحاصيل من المزارعين</li>
+                            <li><i class="fas fa-check"></i> فرز حسب الجودة (درجة أولى/ثانية)</li>
+                            <li><i class="fas fa-check"></i> توريد لشركات التصدير والمصانع</li>
+                            <li><i class="fas fa-check"></i> إدارة مواد التعبئة (كرتون/برنيكة)</li>
+                            <li><i class="fas fa-check"></i> متابعة العهد للمزارعين</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="division-card">
+                        <div class="division-icon"><i class="fas fa-tractor"></i></div>
+                        <h3>قسم المزارع</h3>
+                        <ul class="division-features">
+                            <li><i class="fas fa-check"></i> إدارة الأراضي المستأجرة</li>
+                            <li><i class="fas fa-check"></i> تخطيط ومتابعة الزراعة</li>
+                            <li><i class="fas fa-check"></i> إدارة عمليات الحصاد</li>
+                            <li><i class="fas fa-check"></i> توريد المحاصيل لقسم التوريد</li>
+                            <li><i class="fas fa-check"></i> حساب تكاليف الإنتاج</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="division-card">
+                        <div class="division-icon"><i class="fas fa-microscope"></i></div>
+                        <h3>قسم الدعم الفني</h3>
+                        <ul class="division-features">
+                            <li><i class="fas fa-check"></i> جدولة الزيارات الميدانية</li>
+                            <li><i class="fas fa-check"></i> تشخيص الأمراض والآفات</li>
+                            <li><i class="fas fa-check"></i> تقديم توصيات بالمبيدات</li>
+                            <li><i class="fas fa-check"></i> ربط التوصيات بقسم المبيعات</li>
+                            <li><i class="fas fa-check"></i> خدمة مجانية لتحفيز المبيعات</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-user-friends"></i>
+                    <h2>نظام Party الموحد</h2>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>كود الطرف</th>
+                                <th>الاسم</th>
+                                <th>النوع</th>
+                                <th>يتعامل مع قسم</th>
+                                <th>الرصيد</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>P-1001</td>
+                                <td>مزرعة السلام - أحمد محمد</td>
+                                <td><span style="background: #e3f2fd; padding: 5px 10px; border-radius: 20px;">عميل ومورد</span></td>
+                                <td>المبيدات، التوريد</td>
+                                <td style="color: var(--success);">45,000 ج.م (دائن)</td>
+                            </tr>
+                            <tr>
+                                <td>P-1002</td>
+                                <td>شركة النيل للتصدير</td>
+                                <td><span style="background: #e8f5e9; padding: 5px 10px; border-radius: 20px;">عميل فقط</span></td>
+                                <td>التوريد</td>
+                                <td style="color: var(--danger);">120,000 ج.م (مدين)</td>
+                            </tr>
+                            <tr>
+                                <td>P-1003</td>
+                                <td>شركة المبيدات الحديثة</td>
+                                <td><span style="background: #fff3e0; padding: 5px 10px; border-radius: 20px;">مورد فقط</span></td>
+                                <td>المبيدات</td>
+                                <td style="color: var(--success);">75,000 ج.م (دائن)</td>
+                            </tr>
+                            <tr>
+                                <td>P-1004</td>
+                                <td>مصنع الأغذية المجمدة</td>
+                                <td><span style="background: #e8f5e9; padding: 5px 10px; border-radius: 20px;">عميل فقط</span></td>
+                                <td>التوريد</td>
+                                <td style="color: var(--danger);">35,000 ج.م (مدين)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div style="margin-top: 20px; padding: 20px; background: #f5f5f5; border-radius: 10px;">
+                    <h4 style="color: var(--primary); margin-bottom: 15px;">📌 مميزات نظام Party:</h4>
+                    <ul style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <li><i class="fas fa-check-circle" style="color: var(--success);"></i> كيان واحد للعميل/المورد</li>
+                        <li><i class="fas fa-check-circle" style="color: var(--success);"></i> تعدد العلاقات مع الأقسام</li>
+                        <li><i class="fas fa-check-circle" style="color: var(--success);"></i> تتبع منفصل للتعاملات</li>
+                        <li><i class="fas fa-check-circle" style="color: var(--success);"></i> كشف حساب موحد أو مجزأ</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- تبويب: قاعدة البيانات -->
+        <div class="tab-content" id="database">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-database"></i>
+                    <h2>مخطط قاعدة البيانات (ERD)</h2>
+                </div>
+                
+                <div class="db-diagram">
+                    <pre style="color: #333; font-size: 1.1rem; line-height: 2;">
+┌──────────────────────────────────────────────────────────────────┐
+│                    DATABASE SCHEMA - ERD                          │
+├──────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│    ┌──────────────┐       ┌──────────────┐       ┌──────────────┐│
+│    │   DIVISION   │──────▶│ COST_CENTER  │◀──────│  TREASURY    ││
+│    │   (الأقسام)   │       │ (مراكز التكلفة)│       │  (الخزائن)   ││
+│    └──────────────┘       └──────────────┘       └──────────────┘│
+│           │                        │                      │        │
+│           │                        ▼                      │        │
+│           │                ┌──────────────┐              │        │
+│           └───────────────▶│ JOURNAL_ENTRY │◀─────────────┘        │
+│                            │  (القيود)     │                       │
+│                            └──────────────┘                       │
+│                                   │                               │
+│                                   ▼                               │
+│                    ┌─────────────────────────────┐                │
+│                    │         PARTY               │                │
+│                    │      (الطرف الموحد)          │                │
+│                    ├─────────────────────────────┤                │
+│                    │ party_id | party_name       │                │
+│                    │ 1001     | مزرعة السلام      │                │
+│                    │ 1002     | شركة النيل للتصدير │                │
+│                    └─────────────────────────────┘                │
+│                              │                                    │
+│              ┌───────────────┼───────────────┐                    │
+│              ▼               ▼               ▼                    │
+│    ┌──────────────┐ ┌──────────────┐ ┌──────────────┐            │
+│    │PARTY_CUSTOMER│ │PARTY_SUPPLIER│ │PARTY_DIVISION│            │
+│    │  (عميل)       │ │  (مورد)       │ │(ربط بالأقسام) │            │
+│    └──────────────┘ └──────────────┘ └──────────────┘            │
+│              │               │               │                    │
+│              └───────────────┼───────────────┘                    │
+│                              ▼                                    │
+│                    ┌─────────────────────┐                        │
+│                    │   TRANSACTIONS       │                        │
+│                    │    (المعاملات)        │                        │
+│                    ├─────────────────────┤                        │
+│                    │ • SALE_INVOICE      │                        │
+│                    │ • PURCHASE_INVOICE  │                        │
+│                    │ • CROP_RECEIPT      │                        │
+│                    │ • PAYMENT_VOUCHER   │                        │
+│                    │ • STOCK_TRANSFER    │                        │
+│                    └─────────────────────┘                        │
+└──────────────────────────────────────────────────────────────────┘</pre>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-table"></i>
+                    <h2>هيكل جدول PARTY (الجدول الموحد)</h2>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>الحقل</th>
+                                <th>النوع</th>
+                                <th>الوصف</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>party_id</td><td>BIGINT</td><td>المفتاح الأساسي - معرف فريد</td></tr>
+                            <tr><td>party_code</td><td>VARCHAR(20)</td><td>كود الطرف (فريد)</td></tr>
+                            <tr><td>party_name_ar</td><td>VARCHAR(200)</td><td>الاسم بالعربية</td></tr>
+                            <tr><td>party_type</td><td>ENUM</td><td>CUSTOMER / SUPPLIER / BOTH</td></tr>
+                            <tr><td>category_id</td><td>INT</td><td>تصنيف (مزارع/شركة/مصنع...)</td></tr>
+                            <tr><td>tax_number</td><td>VARCHAR(50)</td><td>الرقم الضريبي</td></tr>
+                            <tr><td>credit_limit</td><td>DECIMAL</td><td>الحد الائتماني</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- تبويب: المحاسبة -->
+        <div class="tab-content" id="accounting">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-calculator"></i>
+                    <h2>دليل الحسابات (Chart of Accounts)</h2>
+                </div>
+                
+                <div class="account-tree">
+                    <pre>
+┌─────────────────────────────────────────────────────────────────┐
+│                    CHART OF ACCOUNTS                             │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  <span style="color: #FFD700;">1- الأصول (Assets)</span>                                             │
+│  ├── <span style="color: #00ff88;">11- الأصول المتداولة</span>                                       │
+│  │   ├── 1101- النقدية بالخزائن                                 │
+│  │   │   ├── 1101-001 خزينة المبيدات                            │
+│  │   │   ├── 1101-002 خزينة شبكات الري                          │
+│  │   │   ├── 1101-003 خزينة التوريد                             │
+│  │   │   ├── 1101-004 خزينة المزارع                             │
+│  │   │   └── 1101-005 خزينة الدعم الفني                         │
+│  │   ├── 1102- البنوك                                           │
+│  │   ├── 1103- العملاء (ذمم مدينة)                              │
+│  │   └── 1104- المخزون                                          │
+│  │       ├── 1104-001 مخزون مبيدات                              │
+│  │       ├── 1104-002 مخزون معدات ري                            │
+│  │       ├── 1104-003 مخزون محاصيل                              │
+│  │       ├── 1104-004 مخزون كرتون                               │
+│  │       └── 1104-005 مخزون برنيكة                              │
+│  └── 12- الأصول الثابتة                                         │
+│                                                                 │
+│  <span style="color: #FFD700;">2- الخصوم (Liabilities)</span>                                        │
+│  ├── 21- الخصوم المتداولة                                       │
+│  │   ├── 2101- الموردين (ذمم دائنة)                             │
+│  │   └── 2102- مستحقات ضريبية                                   │
+│  └── 22- الخصوم طويلة الأجل                                     │
+│                                                                 │
+│  <span style="color: #FFD700;">3- حقوق الملكية (Equity)</span>                                      │
+│  ├── 3101- رأس المال                                            │
+│  ├── 3102- الأرباح المحتجزة                                     │
+│  └── 3103- أرباح/خسائر العام                                    │
+│                                                                 │
+│  <span style="color: #FFD700;">4- الإيرادات (Revenue)</span>                                         │
+│  ├── 4101- مبيعات مبيدات                                        │
+│  ├── 4102- مبيعات معدات ري                                      │
+│  └── 4103- إيرادات توريد محاصيل                                 │
+│                                                                 │
+│  <span style="color: #FFD700;">5- المصروفات (Expenses)</span>                                        │
+│  ├── 51- تكلفة المبيعات                                         │
+│  ├── 52- مصروفات تشغيلية                                        │
+│  └── 53- مصروفات إدارية وعمومية                                 │
+└─────────────────────────────────────────────────────────────────┘</pre>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-chart-bar"></i>
+                    <h2>نموذج قيد محاسبي مع الأقسام</h2>
+                </div>
+                
+                <div class="report-preview">
+                    <div class="report-header">
+                        <h3>قيد محاسبي رقم: JV-2024-001</h3>
+                        <span>التاريخ: 15/12/2024</span>
+                    </div>
+                    
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>الحساب</th>
+                                <th>القسم</th>
+                                <th>مدين</th>
+                                <th>دائن</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1104-001 مخزون مبيدات</td>
+                                <td>المبيدات</td>
+                                <td>50,000</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>2101-001 ذمم موردين - مبيدات</td>
+                                <td>المبيدات</td>
+                                <td>-</td>
+                                <td>50,000</td>
+                            </tr>
+                            <tr class="highlight">
+                                <td colspan="2"><strong>شراء مبيدات من شركة المبيدات الحديثة - فاتورة رقم PUR-001</strong></td>
+                                <td><strong>50,000</strong></td>
+                                <td><strong>50,000</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- تبويب: سير العمل -->
+        <div class="tab-content" id="workflow">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-diagram-project"></i>
+                    <h2>سير العمل - قسم التوريد</h2>
+                </div>
+                
+                <div class="workflow-container">
+                    <div class="workflow-step">
+                        <i class="fas fa-tractor"></i>
+                        استلام من المزارع
+                    </div>
+                    <div class="workflow-arrow">→</div>
+                    <div class="workflow-step">
+                        <i class="fas fa-weight-scale"></i>
+                        وزن المحصول
+                    </div>
+                    <div class="workflow-arrow">→</div>
+                    <div class="workflow-step">
+                        <i class="fas fa-star"></i>
+                        تحديد الجودة
+                    </div>
+                </div>
+                
+                <div style="display: flex; justify-content: space-around; margin: 30px 0;">
+                    <div style="text-align: center;">
+                        <span style="background: var(--success); color: white; padding: 10px 20px; border-radius: 20px;">درجة أولى</span>
+                        <div style="margin-top: 20px;">
+                            <i class="fas fa-box" style="font-size: 2rem; color: var(--primary);"></i>
+                            <p>طازج → كرتون → شركة تصدير</p>
+                        </div>
+                    </div>
+                    <div style="text-align: center;">
+                        <span style="background: var(--warning); color: white; padding: 10px 20px; border-radius: 20px;">درجة ثانية</span>
+                        <div style="margin-top: 20px;">
+                            <i class="fas fa-ice-cream" style="font-size: 2rem; color: var(--info);"></i>
+                            <p>مجمد → برنيكة → مصنع</p>
+                        </div>
+                    </div>
+                    <div style="text-align: center;">
+                        <span style="background: var(--danger); color: white; padding: 10px 20px; border-radius: 20px;">مرفوض</span>
+                        <div style="margin-top: 20px;">
+                            <i class="fas fa-rotate-left" style="font-size: 2rem; color: var(--danger);"></i>
+                            <p>إرجاع للمزارع</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-store"></i>
+                    <h2>سير العمل - قسم المبيدات</h2>
+                </div>
+                
+                <div class="workflow-container">
+                    <div class="workflow-step">
+                        <i class="fas fa-cart-shopping"></i>
+                        أمر شراء
+                    </div>
+                    <div class="workflow-arrow">→</div>
+                    <div class="workflow-step">
+                        <i class="fas fa-truck-ramp-box"></i>
+                        استلام
+                    </div>
+                    <div class="workflow-arrow">→</div>
+                    <div class="workflow-step">
+                        <i class="fas fa-warehouse"></i>
+                        مخزون
+                    </div>
+                    <div class="workflow-arrow">→</div>
+                    <div class="workflow-step">
+                        <i class="fas fa-cash-register"></i>
+                        بيع
+                    </div>
+                </div>
+                
+                <div style="margin-top: 30px; text-align: center;">
+                    <div style="display: inline-block; margin: 0 20px;">
+                        <i class="fas fa-check-circle" style="color: var(--success);"></i> بيع نقدي → إيصال قبض
+                    </div>
+                    <div style="display: inline-block; margin: 0 20px;">
+                        <i class="fas fa-clock" style="color: var(--warning);"></i> بيع آجل → إشعار مدين
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- تبويب: التقارير -->
+        <div class="tab-content" id="reports">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-file-invoice"></i>
+                    <h2>تقرير الأرباح والخسائر لكل قسم</h2>
+                </div>
+                
+                <div class="report-preview">
+                    <div class="report-header">
+                        <h3>قائمة الدخل - ديسمبر 2024</h3>
+                        <span>بالجنيه المصري</span>
+                    </div>
+                    
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>البيان</th>
+                                <th>المبيدات</th>
+                                <th>شبكات الري</th>
+                                <th>التوريد</th>
+                                <th>الإجمالي</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>إجمالي الإيرادات</td>
+                                <td>1,250,000</td>
+                                <td>850,000</td>
+                                <td>2,100,000</td>
+                                <td>4,200,000</td>
+                            </tr>
+                            <tr>
+                                <td>تكلفة المبيعات</td>
+                                <td>(850,000)</td>
+                                <td>(550,000)</td>
+                                <td>(1,600,000)</td>
+                                <td>(3,000,000)</td>
+                            </tr>
+                            <tr style="background: #f0f0f0;">
+                                <td><strong>مجمل الربح</strong></td>
+                                <td><strong>400,000</strong></td>
+                                <td><strong>300,000</strong></td>
+                                <td><strong>500,000</strong></td>
+                                <td><strong>1,200,000</strong></td>
+                            </tr>
+                            <tr>
+                                <td>المصروفات التشغيلية</td>
+                                <td>(150,000)</td>
+                                <td>(120,000)</td>
+                                <td>(200,000)</td>
+                                <td>(470,000)</td>
+                            </tr>
+                            <tr style="background: #e8f5e9;">
+                                <td><strong>صافي الربح</strong></td>
+                                <td><strong style="color: var(--success);">250,000</strong></td>
+                                <td><strong style="color: var(--success);">180,000</strong></td>
+                                <td><strong style="color: var(--success);">300,000</strong></td>
+                                <td><strong style="color: var(--success);">730,000</strong></td>
+                            </tr>
+                            <tr>
+                                <td>نسبة الربحية</td>
+                                <td>20%</td>
+                                <td>21.2%</td>
+                                <td>14.3%</td>
+                                <td>17.4%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-boxes"></i>
+                    <h2>تقرير حالة مواد التعبئة</h2>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>المادة</th>
+                                <th>الرصيد الحالي</th>
+                                <th>عهد لدى المزارعين</th>
+                                <th>الهالك</th>
+                                <th>المتاح الفعلي</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>كرتون 10 كجم</td>
+                                <td>5,000</td>
+                                <td>2,500</td>
+                                <td>150</td>
+                                <td>2,350</td>
+                            </tr>
+                            <tr>
+                                <td>كرتون 5 كجم</td>
+                                <td>3,200</td>
+                                <td>1,800</td>
+                                <td>80</td>
+                                <td>1,320</td>
+                            </tr>
+                            <tr>
+                                <td>برنيكة بلاستيك</td>
+                                <td>8,500</td>
+                                <td>3,200</td>
+                                <td>300</td>
+                                <td>5,000</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- تبويب: التقنيات -->
+        <div class="tab-content" id="tech">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-code"></i>
+                    <h2>البنية التقنية المقترحة (Tech Stack)</h2>
+                </div>
+                
+                <div class="tech-grid">
+                    <div class="tech-item">
+                        <i class="fab fa-react"></i>
+                        <h4>React 18</h4>
+                        <p>واجهة مستخدم تفاعلية وسريعة</p>
+                    </div>
+                    <div class="tech-item">
+                        <i class="fab fa-node"></i>
+                        <h4>Node.js + NestJS</h4>
+                        <p>خادم قوي وقابل للتوسع</p>
+                    </div>
+                    <div class="tech-item">
+                        <i class="fas fa-database"></i>
+                        <h4>PostgreSQL 15</h4>
+                        <p>قاعدة بيانات علائقية متقدمة</p>
+                    </div>
+                    <div class="tech-item">
+                        <i class="fas fa-chart-line"></i>
+                        <h4>Recharts</h4>
+                        <p>رسوم بيانية وتقارير تفاعلية</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-cloud"></i>
+                    <h2>خيار النشر والتشغيل</h2>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                    <div style="background: #e3f2fd; padding: 25px; border-radius: 15px;">
+                        <h3 style="color: var(--info); margin-bottom: 15px;">
+                            <i class="fas fa-globe"></i> تطبيق ويب (مفضل)
+                        </h3>
+                        <ul style="list-style: none;">
+                            <li><i class="fas fa-check" style="color: var(--success);"></i> الوصول من أي مكان</li>
+                            <li><i class="fas fa-check" style="color: var(--success);"></i> تحديثات مركزية</li>
+                            <li><i class="fas fa-check" style="color: var(--success);"></i> لا يحتاج تثبيت</li>
+                            <li><i class="fas fa-check" style="color: var(--success);"></i> تكامل سهل عبر API</li>
+                        </ul>
+                    </div>
+                    <div style="background: #fff3e0; padding: 25px; border-radius: 15px;">
+                        <h3 style="color: var(--warning); margin-bottom: 15px;">
+                            <i class="fas fa-desktop"></i> تطبيق سطح مكتب (بديل)
+                        </h3>
+                        <ul style="list-style: none;">
+                            <li><i class="fas fa-check" style="color: var(--success);"></i> يعمل بدون إنترنت</li>
+                            <li><i class="fas fa-check" style="color: var(--success);"></i> أداء عالي</li>
+                            <li><i class="fas fa-check" style="color: var(--success);"></i> مناسب للمناطق النائية</li>
+                            <li><i class="fas fa-check" style="color: var(--success);"></i> .NET + SQL Server</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- تبويب: التحديات -->
+        <div class="tab-content" id="challenges">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-shield"></i>
+                    <h2>التحديات المتوقعة والحلول العملية</h2>
+                </div>
+                
+                <div class="challenge-card">
+                    <div class="challenge-title">
+                        <i class="fas fa-exclamation-triangle" style="color: var(--warning);"></i>
+                        تعارض المصالح بين الأقسام
+                    </div>
+                    <p>كل قسم يسعى لتعظيم أرباحه على حساب الأقسام الأخرى</p>
+                    <div class="solution">
+                        <i class="fas fa-check-circle"></i> الحل: سياسة تسعير تحويلي عادلة (Transfer Pricing) - سعر التكلفة + هامش ربح متفق عليه
+                    </div>
+                </div>
+                
+                <div class="challenge-card">
+                    <div class="challenge-title">
+                        <i class="fas fa-exclamation-triangle" style="color: var(--warning);"></i>
+                        تلف المحاصيل سريعة التلف
+                    </div>
+                    <p>خسائر كبيرة نتيجة عدم التداول السليم للمحاصيل</p>
+                    <div class="solution">
+                        <i class="fas fa-check-circle"></i> الحل: تطبيق FIFO صارم - تنبيهات تلقائية قبل انتهاء الصلاحية - خصم الهالك من تكلفة القسم
+                    </div>
+                </div>
+                
+                <div class="challenge-card">
+                    <div class="challenge-title">
+                        <i class="fas fa-exclamation-triangle" style="color: var(--warning);"></i>
+                        تأخر المزارعين في إرجاع العهد
+                    </div>
+                    <p>نقص في مواد التعبئة وتأثير على العمليات</p>
+                    <div class="solution">
+                        <i class="fas fa-check-circle"></i> الحل: نظام غرامات تأخير - خصم من مستحقات التوريد - تقارير متابعة أسبوعية
+                    </div>
+                </div>
+                
+                <div class="challenge-card">
+                    <div class="challenge-title">
+                        <i class="fas fa-exclamation-triangle" style="color: var(--warning);"></i>
+                        ضعف الإنترنت في المزارع البعيدة
+                    </div>
+                    <p>تأخر إدخال البيانات وعدم تزامن المعلومات</p>
+                    <div class="solution">
+                        <i class="fas fa-check-circle"></i> الحل: تطبيق PWA يعمل Offline مع مزامنة تلقائية عند توفر الاتصال
+                    </div>
+                </div>
+                
+                <div class="challenge-card">
+                    <div class="challenge-title">
+                        <i class="fas fa-exclamation-triangle" style="color: var(--warning);"></i>
+                        تعدد التسعير حسب العميل/الكمية
+                    </div>
+                    <p>أخطاء في الفواتير ونزاعات مع العملاء</p>
+                    <div class="solution">
+                        <i class="fas fa-check-circle"></i> الحل: جدول أسعار متعدد المستويات - اعتماد السعر عند إنشاء أمر البيع - صلاحيات تغيير الأسعار
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- تبويب: خريطة الطريق -->
+        <div class="tab-content" id="roadmap">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-road"></i>
+                    <h2>خطة التنفيذ - 6 أشهر</h2>
+                </div>
+                
+                <div class="timeline">
+                    <div class="timeline-phase">
+                        <div class="phase-number">1</div>
+                        <div class="phase-title">الأساسيات</div>
+                        <div class="phase-desc">
+                            <strong>الشهر 1-2</strong><br>
+                            • إعداد البيئة التقنية<br>
+                            • Core Module<br>
+                            • دليل الحسابات<br>
+                            • نظام الصلاحيات
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-phase">
+                        <div class="phase-number">2</div>
+                        <div class="phase-title">العمليات الأساسية</div>
+                        <div class="phase-desc">
+                            <strong>الشهر 3-4</strong><br>
+                            • قسم المبيدات<br>
+                            • قسم شبكات الري<br>
+                            • نظام الخزائن<br>
+                            • التقارير الأساسية
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-phase">
+                        <div class="phase-number">3</div>
+                        <div class="phase-title">العمليات المتخصصة</div>
+                        <div class="phase-desc">
+                            <strong>الشهر 5</strong><br>
+                            • قسم التوريد<br>
+                            • قسم المزارع<br>
+                            • التحويل بين المخازن<br>
+                            • نظام العهد
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-phase">
+                        <div class="phase-number">4</div>
+                        <div class="phase-title">التكامل</div>
+                        <div class="phase-desc">
+                            <strong>الشهر 6</strong><br>
+                            • الدعم الفني<br>
+                            • التقارير المالية المجمعة<br>
+                            • لوحات المعلومات<br>
+                            • التدريب والتسليم
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, var(--primary-dark), var(--primary)); color: white; padding: 25px; border-radius: 15px; margin-top: 30px; text-align: center;">
+                    <h3 style="margin-bottom: 15px;">🎯 الجاهزية للإنتاج</h3>
+                    <p style="font-size: 1.1rem;">النظام مصمم ليكون Production Ready مع مراعاة كافة المتطلبات المحاسبية والإدارية والتشغيلية</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- الفوتر -->
+        <footer class="footer">
+            <a href="future vision.html">عرض الخطه المستقبليه</a>
+            <p style="font-size: 1.2rem; color: var(--primary); font-weight: 700;">
+                🌾 نظام ERP متكامل للاستثمار الزراعي
+            </p>
+            <p>تم إعداد هذا التحليل والتصميم بواسطة /هيثم نبيل 01008805646</p>
+            <p style="margin-top: 20px; opacity: 0.7;">© 2024 جميع الحقوق محفوظة</p>
+        </footer>
+    </div>
+
+    <script>
+        // تفعيل التبويبات
+        const tabs = document.querySelectorAll('.nav-tab');
+        const contents = document.querySelectorAll('.tab-content');
+        
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const targetId = tab.dataset.tab;
+                
+                // إزالة active من الكل
+                tabs.forEach(t => t.classList.remove('active'));
+                contents.forEach(c => c.classList.remove('active'));
+                
+                // إضافة active للمحدد
+                tab.classList.add('active');
+                document.getElementById(targetId).classList.add('active');
+            });
+        });
+        
+        // شريط التقدم
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressBar').style.width = scrolled + '%';
+        });
+        
+        // تحسين الطباعة
+        window.addEventListener('beforeprint', () => {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.add('active'));
+        });
+        
+        window.addEventListener('afterprint', () => {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.getElementById('overview').classList.add('active');
+            document.querySelector('[data-tab="overview"]').classList.add('active');
+        });
+    </script>
+</body>
+</html>
